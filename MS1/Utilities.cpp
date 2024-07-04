@@ -34,21 +34,22 @@ namespace seneca {
             throw std::to_string(m_delimiter) + " found at " + std::to_string(next_pos);
         }
 
+        std::string token{""};
+
         size_t pos = str.find(m_delimiter, next_pos);
         if (pos != std::string::npos) {
-            // `token` will not contain any delimiters ~~~~~~~v
-            std::string token = trim(str.substr(next_pos, pos - next_pos));
+            // `token` will not contain any delimiters ~~~~v
+            token = trim(str.substr(next_pos, pos - next_pos));
 
             more = true;
             next_pos = pos + 1;
 
-            if (token.length() > m_widthField) m_widthField = token.length();
-            
-            return token;
+        } else {
+            token = trim(str.substr(next_pos));
         }
 
-        // TODO what should be returned for unsuccessful cases?
-        return "";
+        if (token.length() > m_widthField) m_widthField = token.length();
+        return token;
     }
 
     void Utilities::setDelimiter(char newDelimiter) { m_delimiter = newDelimiter; }

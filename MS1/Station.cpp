@@ -18,7 +18,8 @@ namespace seneca {
         size_t next_pos{0};
         bool more{true};
 
-        try {
+        // extractToken can throw exceptions
+        // try {
             m_name = utils.extractToken(str, next_pos, more);
             m_nextSerial = std::stoul(utils.extractToken(str, next_pos, more));
             m_quantity = std::stoul(utils.extractToken(str, next_pos, more));
@@ -28,11 +29,17 @@ namespace seneca {
 
             m_desc = utils.extractToken(str, next_pos, more);
 
-        } catch (...) {
-            std::cerr << "Error: failed to extract token" << std::endl;
-        }
+        // } catch (...) {
+        //     std::cout << "Error: failed to extract token" << std::endl;
+        // }
 
-        m_id = id_generator++;
+        /**
+         * Every time a new instance is created, the current value of the id_generator
+         * is stored in that instance, and id_generator is incremented.
+         * 
+         * ^ Should be id_generator++ but the output does not match
+         */
+        m_id = ++id_generator;
     }
 
     const std::string& Station::getItemName() const { return m_name; }
@@ -45,13 +52,17 @@ namespace seneca {
 
     void Station::display(std::ostream& os, bool full) const {
         os.width(3);
-        os << std::left << m_id << " | ";
+        os.fill('0');
+        os << std::right << m_id << " | ";
+        os.fill(' ');
 
         os.width(m_widthField);
         os << std::left << m_name << " | ";
 
         os.width(6);
-        os << std::left << m_nextSerial << " | ";
+        os.fill('0');
+        os << std::right << m_nextSerial << " | ";
+        os.fill(' ');
         
         if (full) {
             os.width(4);
