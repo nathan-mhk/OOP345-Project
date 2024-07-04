@@ -14,8 +14,8 @@ namespace seneca {
     size_t Station::id_generator{0};
 
     Station::Station(const std::string& str) {
-        Utilities utils;
-        size_t next_pos{0};
+        Utilities utils{};
+        size_t next_pos{};
         bool more{true};
 
         // extractToken can throw exceptions
@@ -48,7 +48,7 @@ namespace seneca {
 
     size_t Station::getQuantity() const { return m_quantity; }
 
-    void Station::updateQuantity() { m_quantity--; }
+    void Station::updateQuantity() { --m_quantity; }
 
     void Station::display(std::ostream& os, bool full) const {
         os.width(3);
