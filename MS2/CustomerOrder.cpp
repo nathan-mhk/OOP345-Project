@@ -49,8 +49,18 @@ namespace seneca {
         *this = std::move(other);
     }
 
+    void CustomerOrder::clear() {
+        for (size_t i = 0; i < m_cntItem; ++i) {
+            delete m_lstItem[i];
+            m_lstItem[i] = nullptr;
+        }
+        delete[] m_lstItem;
+        m_lstItem = nullptr;
+    }
+
     CustomerOrder& CustomerOrder::operator=(CustomerOrder&& other) noexcept {
         if (this != &other) {
+            clear();
             m_name = other.m_name;
             m_product = other.m_product;
             m_cntItem = other.m_cntItem;
@@ -65,12 +75,7 @@ namespace seneca {
     }
 
     CustomerOrder::~CustomerOrder() {
-        for (size_t i = 0; i < m_cntItem; ++i) {
-            delete m_lstItem[i];
-            m_lstItem[i] = nullptr;
-        }
-        delete[] m_lstItem;
-        m_lstItem = nullptr;
+        clear();
     }
 
     bool CustomerOrder::isOrderFilled() const {
