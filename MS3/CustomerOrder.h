@@ -30,6 +30,8 @@ namespace seneca {
 
         static size_t m_widthField;
 
+        void clear();
+
     public:
         CustomerOrder() = default;
         CustomerOrder(const std::string& str);
