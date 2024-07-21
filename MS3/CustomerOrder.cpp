@@ -97,7 +97,7 @@ namespace seneca {
 
         for (size_t i = 0; i < m_cntItem; ++i) {
             Item& item = *m_lstItem[i];
-            if (item.m_itemName == itemName) {
+            if (!item.m_isFilled && item.m_itemName == itemName) {
                 if (station.getQuantity() > 0) {
                     station.updateQuantity();
 
@@ -106,10 +106,11 @@ namespace seneca {
 
                     // There are indentations in the sample output
                     os << "    Filled " << m_name << ", " << m_product << " [" << item.m_itemName << "]" << std::endl;
+                    return;     // This modifier fills **one** item in the current order
                 } else {
                     os << "    Unable to fill " << m_name << ", " << m_product << " [" << item.m_itemName << "]" << std::endl;
+                    // By design, keep looping if unable to fill. Return only when an item is filled.
                 }
-                return;     // This modifier fills **one** item in the current order
             }
         }
     }
@@ -123,7 +124,7 @@ namespace seneca {
             os << "[";
             os.width(6);
             os.fill('0');
-            os << item.m_serialNumber << "] ";
+            os << std::right << item.m_serialNumber << "] ";
             os.fill(' ');
 
             os.width(m_widthField);
