@@ -9,8 +9,8 @@
 #ifndef SENECA_LINEMANAGER_H
 #define SENECA_LINEMANAGER_H
 
-#include "Workstation.h"
 #include <vector>
+#include "Workstation.h"
 
 namespace seneca {
     extern std::deque<CustomerOrder> g_pending;

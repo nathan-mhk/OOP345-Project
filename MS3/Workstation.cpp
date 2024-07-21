@@ -29,14 +29,14 @@ namespace seneca {
             // Not enough inventory == `getQuantity() == 0`
             if (order.isItemFilled(getItemName()) || getQuantity() == 0) {
                 if (m_pNextStation) {
+                    // There is a next station in the assembly line
                     *m_pNextStation += std::move(order);
+
                 } else if (order.isOrderFilled()) {
-                    // No next station in the assembly line
                     g_completed.push_back(std::move(order));
                 } else {
                     g_incomplete.push_back(std::move(order));
                 }
-                
                 m_orders.pop_front();
                 return true;
             }

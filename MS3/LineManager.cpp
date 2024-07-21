@@ -16,7 +16,7 @@ namespace seneca {
         std::ifstream ifs(file, std::ios::in);
 
         if (!ifs.good()) {
-            throw std::string("Unable to open [") + file + "] file.";
+            throw std::string("Unable to open file [") + file + "].";
         }
 
         std::vector<std::string> data{};
@@ -33,11 +33,13 @@ namespace seneca {
         Utilities utils{};
         bool found{false};
         Workstation* prevStation{nullptr};
+
         std::for_each(data.begin(), data.end(), [&](const std::string& str) {
             size_t pos{};
             bool more{true};
             std::string stationName{};
 
+            // currStation|nextStation
             stationName = utils.extractToken(str, pos, more);
 
             std::vector<Workstation*>::const_iterator currStation = std::find_if(stations.begin(), stations.end(), [&](Workstation* station) {
@@ -45,7 +47,7 @@ namespace seneca {
             });
 
             if (currStation == stations.end()) {
-                throw std::string("Unable to find current station [") + stationName + "] in the assembly line.";
+                throw std::string("Unable to find currStation [") + stationName + "] in the assembly line.";
             }
 
             if (more) {
@@ -57,7 +59,7 @@ namespace seneca {
                 });
 
                 if (nextStation == stations.end()) {
-                    throw std::string("Unable to find next station [") + stationName + "] in the assembly line.";
+                    throw std::string("Unable to find nextStation [") + stationName + "] in the assembly line.";
                 }
 
                 if (*nextStation == *currStation) {
@@ -82,7 +84,10 @@ namespace seneca {
         std::for_each(m_activeLine.begin(), m_activeLine.end(), [&](Workstation* s) {
             found = false;
             std::for_each(m_activeLine.begin(), m_activeLine.end(), [&](Workstation* station) {
-                // Added `!found` to prevent finding prevStation more than once in a single iteration
+                /**
+                 * Added `!found` to prevent finding `prevStation` more than once in a single iteration
+                 * (ensure `count` == `.size()` in the end)
+                 */
                 if (!found && station->getNextStation() == prevStation) {
                     found = true;
                     prevStation = station;
@@ -101,7 +106,6 @@ namespace seneca {
                 m_firstStation = prevStation;
             }
         });
-
         // Total number of orders in the `g_pending` queue initially.
         m_cntCustomerOrder = g_pending.size();
     }
@@ -114,7 +118,6 @@ namespace seneca {
             orderedLines.push_back(currStation);
             currStation = currStation->getNextStation();
         }
-
         m_activeLine = orderedLines;
     }
 
